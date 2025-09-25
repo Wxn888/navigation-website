@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Navigation</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="hence">
+    <h2 style="text-align:center; margin-bottom:20px;">Our Manufacturing Capabilities</h2>
+    <p style="text-align: center; font-size: 20px; margin-bottom: 30px;">
+        Explore our comprehensive range of manufacturing services tailored to your specific needs.
+    </p>
+    </div>
+  <!-- 导航条 -->
+  <div class="tabs" id="tabs">
+    <div class="tab active">Product Design</div>
+    <div class="tab">Injection Molding</div>
+    <div class="tab">CNC Machining</div>
+    <div class="tab">3D Printing</div>
+    <div class="tab">Sheet Metal</div>
+    <div class="tab">Die Casting</div>  
+    <div class="tab">Assembly</div>
+  </div>
+
+  <!-- 轮播容器 -->
+  <div class="slider" id="slider">
+    <div class="slides" id="slides">
+      <div class="slide">
+        <div class="img" style="background-image:url('https://picsum.photos/seed/ch/800/600')"></div>
+        <div class="desc">
+          <h4>Product Design</h4>
+          <p>From concept to blueprint, we offer industrial design, structural design and appearance design, 
+             quickly transforming ideas into manufacturable solutions.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="img" style="background-image:url('https://picsum.photos/seed/im/800/600')"></div>
+        <div class="desc">
+          <h4>Injection Molding</h4>
+          <p>Injection molding services support a variety of materials and tolerance control, 
+             making it suitable for medium and large-scale production of plastic parts.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="img" style="background-image:url('https://picsum.photos/seed/cnc/800/600')"></div>
+        <div class="desc">
+          <h4>CNC Machining</h4>
+          <p>High-precision CNC machining can achieve tight tolerances and excellent surfaces
+             for both metal and engineering plastic parts.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="img" style="background-image:url('https://picsum.photos/seed/3d/800/600')"></div>
+        <div class="desc">
+          <h4>3D Printing</h4>
+          <p>Rapid prototyping and complex structure manufacturing, multiple processes and 
+            post-processing, supporting small-batch production verification.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="img" style="background-image:url('https://picsum.photos/seed/me/800/600')"></div>
+        <div class="desc">
+          <h4>Sheet Metal</h4>
+          <p>Rapid prototyping and complex structure manufacturing, multiple processes and 
+            post-processing, supporting small-batch production verification.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="img" style="background-image:url('https://picsum.photos/seed/ca/800/600')"></div>
+        <div class="desc">
+          <h4>Die Casting</h4>
+          <p>Rapid prototyping and complex structure manufacturing, multiple processes and 
+            post-processing, supporting small-batch production verification.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="img" style="background-image:url('https://picsum.photos/seed/as/800/600')"></div>
+        <div class="desc">
+          <h4>Assembly</h4>
+          <p>Rapid prototyping and complex structure manufacturing, multiple processes and 
+            post-processing, supporting small-batch production verification.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3 style="text-align: center;">拖动图片翻页，3s自动翻页，点击导航栏翻页</h3>
+  </div>
+  <script>
+    /*
+      说明：
+      - 通过 JS 动态把每个 slide 的宽度设置成 slider 的 clientWidth（px）
+      - slides 总宽度 = slideCount * slideWidth（px）
+      - translateX 使用 px 值： -currentIndex * slideWidth
+      - 使用 pointer 事件支持鼠标/触摸拖拽（桌面 + 移动）
+      - 自动轮播（交互后会重置定时器）
+    */
+
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const slider = document.getElementById("slider");
+    const slides = document.getElementById("slides");
+    const slideEls = Array.from(document.querySelectorAll(".slide"));
+    let slideCount = slideEls.length;
+
+    let currentIndex = 0;
+    let slideWidth = 0;      // 单个 slide 的像素宽度（与 slider.clientWidth 保持一致）
+    let autoPlayTimer = null;
+
+    // --- 初始化尺寸（在 load 与 resize 时调用） ---
+    function setSizes() {
+      // 获取可视器宽度（slider 的实际宽度）
+      slideWidth = slider.clientWidth;
+
+      // slides 总宽 = 每个 slide 的宽 * 数量（px）
+      slides.style.width = `${slideCount * slideWidth}px`;
+
+      // 每个 slide 宽度设置为 slideWidth（px），这样每个 slide 占一个“格子”
+      slideEls.forEach(slide => {
+        slide.style.width = `${slideWidth}px`;
+      });
+
+      // 把 transform 位置同步到 currentIndex（无动画）
+      slides.style.transition = 'none';
+      slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+      // 恢复动画（下一次切换将有动画）
+      requestAnimationFrame(() => {
+        slides.style.transition = 'transform 0.32s ease';
+      });
+    }
+
+    // --- 切换到某页（0..slideCount-1） ---
+    function goToSlide(index, skipResetAuto = false) {
+      // 边界处理
+      index = Math.max(0, Math.min(index, slideCount - 1));
+      currentIndex = index;
+      slides.style.transition = 'transform 0.32s ease';
+      slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+      // 更新导航高亮
+      tabs.forEach(t => t.classList.remove('active'));
+      tabs[currentIndex].classList.add('active');
+      if (!skipResetAuto) resetAutoPlay(); // 手动/程序切换时重置自动轮播
+    }
+
+    // --- 点击 tab 切换 ---
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        goToSlide(i);
+      });
+    });
+
+    // --- 自动轮播 ---
+    function autoPlay() {
+      clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(() => {
+        goToSlide((currentIndex + 1) % slideCount, true);
+      }, 3000);
+    }
+    function resetAutoPlay() {
+      clearInterval(autoPlayTimer);
+      autoPlay();
+    }
+
+    // --- 指针拖拽（pointer events，支持鼠标/触摸） ---
+    let isPointerDown = false;
+    let startX = 0;
+    let prevTranslate = 0;   // 记录拖拽开始前的 translateX（px）
+    let currentTranslate = 0;
+
+    function onPointerDown(e) {
+      isPointerDown = true;
+      startX = e.clientX;
+      prevTranslate = -currentIndex * slideWidth; // 当前偏移（负数或 0）
+      // 取消平滑过渡，拖动时要跟随手指
+      slides.style.transition = 'none';
+
+      // 捕获指针（使 move/up 能持续到该元素）
+      try { e.target.setPointerCapture(e.pointerId); } catch (err) { /* 某些环境可能失败 */ }
+
+      // 停止自动轮播（用户交互优先）
+      clearInterval(autoPlayTimer);
+    }
+
+    function onPointerMove(e) {
+      if (!isPointerDown) return;
+      const dx = e.clientX - startX;
+      currentTranslate = prevTranslate + dx;
+      slides.style.transform = `translateX(${currentTranslate}px)`;
+    }
+
+    function onPointerUp(e) {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      // 释放指针捕获
+      try { e.target.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+
+      // 计算滑动距离，判断是否切到上下页（阈值：1/4 宽度）
+      const moved = currentTranslate - prevTranslate; // 正值=向右拖（看前一页），负值=向左拖（看下一页）
+      const threshold = slideWidth / 4;
+
+      if (moved < -threshold && currentIndex < slideCount - 1) {
+        goToSlide(currentIndex + 1);
+      } else if (moved > threshold && currentIndex > 0) {
+        goToSlide(currentIndex - 1);
+      } else {
+        // 回弹到当前页
+        goToSlide(currentIndex);
+      }
+      // 恢复自动轮播
+      resetAutoPlay();
+    }
+
+    // 绑定 pointer 事件（绑定在 slides 上）
+    slides.addEventListener('pointerdown', onPointerDown);
+    slides.addEventListener('pointermove', onPointerMove);
+    slides.addEventListener('pointerup', onPointerUp);
+    slides.addEventListener('pointercancel', onPointerUp);
+    slides.addEventListener('lostpointercapture', onPointerUp);
+
+    // --- 窗口尺寸变更时重新计算宽度（响应式） ---
+    window.addEventListener('resize', () => {
+      // 保持当前页（例如：宽度变了仍然显示当前索引的页）
+      setSizes();
+    });
+
+    // 初始化
+    window.addEventListener('load', () => {
+      setSizes();
+      autoPlay();
+    });
+
+  </script>
+</body>
+</html>

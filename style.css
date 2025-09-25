@@ -1,0 +1,118 @@
+/* 全局 */
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: #f7f7f7;
+    }
+
+    .hence{
+        width: 861px;
+        margin: 0 auto;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 40px;
+      font-weight: 650;
+      color: #222;
+    }
+
+    /* ===== 导航条：宽度 80% 并居中 ===== */
+    .tabs {
+        display: flex;
+        font-size: 8px;
+        width: 80%;                
+        max-width: 1000px;         /* 限制最大宽度，保证大屏不会无限变宽 */
+        height: 50px;
+        margin: 0 auto 20px;        
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        overflow: hidden;
+        align-items: stretch;
+    }
+
+    .tab {
+      flex: 1;                   /* 平均分配宽度 */
+      padding: 14px 14px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background .22s, color .22s, transform .12s;
+      font-weight: 600;
+      font-size: 14px;
+      color: #555;
+    }
+    .tab:hover { transform: translateY(-2px); background: #f3f6ff; }
+    .tab.active {
+      background: #2f7cff;       /* 高亮色 */
+      color: #fff;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.06);
+    }
+
+    /* ===== carousel 容器：和导航条对齐宽度 ===== */
+    .slider {
+    width: 80%;                
+    max-width: 1000px;          /* 同样限制最大宽度 */
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    background: #fff;
+    touch-action: pan-y;     /* 允许竖向滚动，但阻止横向默认手势（提高拖拽体验） */
+    }
+
+    /* slides 是一个 flex 容器，宽度与 JS 动态设置（px）配合使用 */
+    .slides {
+      display: flex;
+      transition: transform 0.32s ease; /* 平滑动画 */
+      will-change: transform;
+    }
+
+    /* 每个 slide 的宽度由 JS 动态设置为 slider.clientWidth（px），
+       所以这里使用 flex: 0 0 auto 并通过 JS 写入 width */
+    .slide {
+      flex: 0 0 auto;
+      box-sizing: border-box;
+      padding: 10px;
+      text-align: left;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    /* 示例：图片与描述 */
+    .slide .img {
+      width: 360px;
+      height: 270px;
+      border-radius: 8px;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+    .slide .desc {
+      flex: 1;
+    }
+    .slide h4 {
+      margin: 0 0 5px;
+        font-size: 25px;
+      font-weight: 600;
+    }
+    .slide p {
+      margin: 3;
+      color: #444;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* 小屏适配：堆叠布局 */
+    @media (max-width: 720px) {
+      .slide {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .slide .img { width: 80%; height: 180px; }
+    }
