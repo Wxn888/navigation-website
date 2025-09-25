@@ -111,7 +111,7 @@
     /* 小屏适配：堆叠布局 */
     @media (max-width: 720px) {
       .hence{
-        width: 50%;
+        width: 90%;
       }
       .slide {
         flex-direction: column;
